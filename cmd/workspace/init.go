@@ -43,8 +43,8 @@ var workspaceInitCommand = &cobra.Command{
 
 			// Download next submission
 			submission, err := client.Exercise.Download(&ilias.DownloadParams{
-				Reference:  workSpace.Exercise,
-				Assignment: workSpace.Assignment,
+				Reference:  workSpace.Exercise.Reference,
+				Assignment: workSpace.Exercise.Assignment,
 				Member:     memberId,
 			})
 

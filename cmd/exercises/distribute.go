@@ -63,9 +63,17 @@ func distribute(exerciseId string, assignmentId string) {
 
 	assignments := assignSubmissions(tutors, submissions)
 	workSpace := util.WorkSpace{
-		Exercise:    exerciseId,
-		Assignment:  assignmentId,
-		Corrections: assignments,
+		Exercise: util.Exercise{
+			Reference:  exerciseId,
+			Assignment: assignmentId,
+		},
+
+		Table: util.Table{
+			Reference:  "",
+			Identifier: "",
+		},
+
+		Corrections:       assignments,
 	}
 
 	output, err := yaml.Marshal(workSpace)

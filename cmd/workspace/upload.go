@@ -50,8 +50,8 @@ var workspaceUploadCommand = &cobra.Command{
 		// Upload comments
 		for _, correction := range corrections {
 			err := client.Exercise.UpdateComment(&ilias.CommentParams{
-				Reference:  workSpace.Exercise,
-				Assignment: workSpace.Assignment,
+				Reference:  workSpace.Exercise.Reference,
+				Assignment: workSpace.Exercise.Assignment,
 			}, correction)
 
 			if err != nil {
@@ -63,13 +63,10 @@ var workspaceUploadCommand = &cobra.Command{
 
 		bar.Finish()
 
-		// Update grades
-		fmt.Fprint(os.Stderr, ", ")
-
 		spin := util.StartSpinner("Updating grades")
 		err := client.Exercise.UpdateGrades(&ilias.GradesQuery{
-			Reference:  workSpace.Exercise,
-			Assignment: workSpace.Assignment,
+			Reference:  workSpace.Exercise.Reference,
+			Assignment: workSpace.Exercise.Assignment,
 			Token:      client.User.Token,
 		}, corrections)
 
@@ -79,5 +76,20 @@ var workspaceUploadCommand = &cobra.Command{
 		}
 
 		spin.StopSuccess(fmt.Sprintf("Updated %d entries", len(corrections)))
+
+		spin = util.StartSpinner("Uploading table")
+		sheet := util.CreateCorrectionSheet(workSpace.Table.Name, corrections)
+		err = client.Tables.Import(&ilias.ImportParams{
+			Reference: workSpace.Table.Reference,
+			Table:     workSpace.Table.Identifier,
+			Token: 	   client.User.Token,
+		}, sheet)
+
+		if err != nil {
+			spin.StopError(err)
+			os.Exit(1)
+		}
+
+		spin.StopSuccess(fmt.Sprintf("Uploaded %d entries", len(corrections)))
 	},
 }
