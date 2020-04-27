@@ -30,7 +30,7 @@ func GetCredentials() *ilias.Credentials {
 	password, present := os.LookupEnv(envPassword)
 	if present == false {
 		fmt.Fprint(os.Stderr, "Password for 'https://ilias.hhu.de': ")
-		inputBytes, err := terminal.ReadPassword(syscall.Stdin)
+		inputBytes, err := terminal.ReadPassword(int(syscall.Stdin))
 		if err != nil {
 			log.Fatal(err)
 		}
