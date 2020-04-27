@@ -1,0 +1,30 @@
+language: go
+
+go: "1.14"
+
+env:
+  global:
+    - LINUX_BINARY=release/ilias-${TRAVIS_TAG}-linux-amd64
+    - DARWIN_BINARY=release/ilias-${TRAVIS_TAG}-darwin-amd64
+
+before_script:
+  - go get
+
+script:
+  - go test
+
+before_deploy:
+  - mkdir -p release
+  - "GOOS=linux  GOARCH=amd64 go build -o ${LINUX_BINARY}"
+  - "GOOS=darwin GOARCH=amd64 go build -o ${DARWIN_BINARY}"
+
+deploy:
+  provider: releases
+  api_key: ${API_KEY}
+  skip_cleanup: true
+  file:
+    - "${LINUX_BINARY}"
+    - "${DARWIN_BINARY}"
+  on:
+    repo: krakowski/ilias-cli
+    tags: true
