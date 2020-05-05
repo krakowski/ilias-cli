@@ -23,11 +23,11 @@ var workspaceInitCommand = &cobra.Command{
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		workspace := util.ReadWorkspace()
 		client := util.NewIliasClient()
 
 		// Parse workspace file
-		workSpace := util.GetWorkspace()
-		memberIds := workSpace.Corrections[client.User.Username]
+		memberIds := workspace.Corrections[client.User.Username]
 
 		// Initialize progress bar
 		bar := util.StartProgressBar(len(memberIds), "Downloading submissions")
@@ -43,8 +43,8 @@ var workspaceInitCommand = &cobra.Command{
 
 			// Download next submission
 			submission, err := client.Exercise.Download(&ilias.DownloadParams{
-				Reference:  workSpace.Exercise.Reference,
-				Assignment: workSpace.Exercise.Assignment,
+				Reference:  workspace.Exercise.Reference,
+				Assignment: workspace.Exercise.Assignment,
 				Member:     memberId,
 			})
 

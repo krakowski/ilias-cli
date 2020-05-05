@@ -16,5 +16,6 @@ func NewIliasClient() (*ilias.Client) {
 	}
 
 	spin.StopSuccess(fmt.Sprintf("Welcome %s!", client.User.Firstname))
+	WriteUserCache(client.User.Username)
 	return client
 }

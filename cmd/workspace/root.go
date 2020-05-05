@@ -18,4 +18,5 @@ var RootCommand = &cobra.Command{
 func init() {
 	RootCommand.AddCommand(workspaceInitCommand)
 	RootCommand.AddCommand(workspaceUploadCommand)
+	RootCommand.AddCommand(workspaceStatusCommand)
 }

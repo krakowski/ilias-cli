@@ -1,13 +1,16 @@
 package util
 
 import (
+	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 const (
 	WorkspaceFilename = ".workspace.yml"
+	UsercacheFilename = ".user"
 )
 
 type Exercise struct {
@@ -21,23 +24,48 @@ type Table struct {
 	Name	    string		`yaml:"name"`
 }
 
-type WorkSpace struct {
+type Workspace struct {
+	Title			  string					`yaml:"title"`
 	Exercise 		  Exercise					`yaml:"exercise"`
-	Table 		  	  Table						`yaml:"table"`
+	//Table 		  	  Table						`yaml:"table"`
 	Corrections       map[string][]string		`yaml:"corrections"`
 }
 
-func GetWorkspace() WorkSpace {
+func ReadWorkspace() Workspace {
+	assertWorkspaceExists()
 	data, err := ioutil.ReadFile(WorkspaceFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	workspace := WorkSpace{}
+	workspace := Workspace{}
 	err = yaml.Unmarshal(data, &workspace)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	return workspace
+}
+
+func WriteUserCache(username string) {
+	if err := ioutil.WriteFile(UsercacheFilename, []byte(username), 0644); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func ReadUserCache() string {
+	username, err := ioutil.ReadFile(UsercacheFilename)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, Red("workspace is not initialized"))
+		os.Exit(1)
+	}
+
+	return string(username)
+}
+
+func assertWorkspaceExists() {
+	if _, err := os.Stat(WorkspaceFilename); os.IsNotExist(err) {
+		fmt.Fprintln(os.Stderr, Red("not a ILIAS workspace"))
+		os.Exit(1)
+	}
 }

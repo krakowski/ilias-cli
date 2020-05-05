@@ -5,12 +5,16 @@ import (
 	"github.com/krakowski/ilias"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
+	"log"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
 const (
 	CorrectionTemplateFilename = "CORRECTION.tmpl"
+	SubmissionFilename = "Abgabe"
+	CorrectionFilename = "Korrektur.yml"
 )
 
 type CorrectionTemplate struct {
@@ -21,6 +25,11 @@ type CorrectionTemplate struct {
 type TemplateParams struct {
 	Student		string
 	Tutor 		string
+}
+
+type CorrectionStats struct {
+	Corrected	[]ilias.Correction
+	Pending		[]ilias.Correction
 }
 
 func WriteCorrectionTemplate(path string, params TemplateParams) error {
@@ -57,6 +66,34 @@ func ReadCorrection(path string) (*ilias.Correction, error) {
 	}
 
 	return &correction, nil
+}
+
+func ReadCorrections(members []string) []ilias.Correction {
+	var corrections []ilias.Correction
+	for _, member := range members {
+		path := filepath.Join(member, CorrectionFilename)
+		correction, err := ReadCorrection(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		corrections = append(corrections, *correction)
+	}
+
+	return corrections
+}
+
+func GetCorrectionStats(corrections []ilias.Correction) CorrectionStats {
+	stats := CorrectionStats{}
+	for _, correction := range corrections {
+		if correction.Corrected {
+			stats.Corrected = append(stats.Corrected, correction)
+		} else {
+			stats.Pending = append(stats.Pending, correction)
+		}
+	}
+
+	return stats
 }
 
 func FilterCorrections(values []ilias.Correction, test func(correction ilias.Correction) bool) (ret []ilias.Correction) {

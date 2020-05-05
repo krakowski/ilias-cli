@@ -62,16 +62,16 @@ func distribute(exerciseId string, assignmentId string) {
 	spin.StopSuccess(fmt.Sprintf("Received %d entries", len(submissions)))
 
 	assignments := assignSubmissions(tutors, submissions)
-	workSpace := util.WorkSpace{
+	workSpace := util.Workspace{
 		Exercise: util.Exercise{
 			Reference:  exerciseId,
 			Assignment: assignmentId,
 		},
 
-		Table: util.Table{
-			Reference:  "",
-			Identifier: "",
-		},
+		//Table: util.Table{
+		//	Reference:  "",
+		//	Identifier: "",
+		//},
 
 		Corrections:       assignments,
 	}

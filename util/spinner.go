@@ -12,8 +12,8 @@ type Spinner struct {
 }
 
 const (
-	iconSuccess = "✓"
-	iconError = "✘"
+	IconSuccess = "✓"
+	IconError   = "✘"
 
 	NoMessage = ""
 )
@@ -30,13 +30,13 @@ func (spin *Spinner) StopSuccess(message string) {
 	spin.spinner.Stop()
 
 	if message == NoMessage {
-		fmt.Fprintf(os.Stderr, "%s%s\n", Green(iconSuccess), spin.spinner.Suffix)
+		fmt.Fprintf(os.Stderr, "%s%s\n", Green(IconSuccess), spin.spinner.Suffix)
 	} else {
-		fmt.Fprintf(os.Stderr, "%s%s - %s\n", Green(iconSuccess), spin.spinner.Suffix, message)
+		fmt.Fprintf(os.Stderr, "%s%s - %s\n", Green(IconSuccess), spin.spinner.Suffix, message)
 	}
 }
 
 func (spin *Spinner) StopError(err error) {
 	spin.spinner.Stop()
-	fmt.Fprintf(os.Stderr, "%s%s - %s\n", Red(iconError), spin.spinner.Suffix, Red("(" + err.Error() + ")"))
+	fmt.Fprintf(os.Stderr, "%s%s - %s\n", Red(IconError), spin.spinner.Suffix, Red("(" + err.Error() + ")"))
 }
