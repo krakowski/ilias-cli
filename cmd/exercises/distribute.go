@@ -29,7 +29,7 @@ var (
 	seed int64
 )
 
-var submissionsDistributeCommand = &cobra.Command{
+var exerciseDistributeCommand = &cobra.Command{
 	Use:   "distribute [exercise] [assignment]",
 	Short: "Distributes submissions on a set of tutors",
 	SilenceErrors: true,
@@ -157,5 +157,5 @@ func printTutorTable(tutors []Tutor) {
 }
 
 func init() {
-	submissionsDistributeCommand.Flags().Int64Var(&seed, "seed", 0, "RNG seed")
+	exerciseDistributeCommand.Flags().Int64Var(&seed, "seed", 0, "RNG seed")
 }

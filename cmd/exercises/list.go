@@ -17,7 +17,7 @@ var (
 	header = []string{"ID", "Kennung", "Nachname", "Vorname", "Abgabe"}
 )
 
-var submissionsListCommand = &cobra.Command{
+var exerciseListCommand = &cobra.Command{
 	Use:   "list [exerciseId] [assignmentId]",
 	Short: "Lists all submissions within an submissions",
 	SilenceErrors: true,
@@ -72,6 +72,6 @@ func printTable(submissions []ilias.SubmissionMeta) {
 }
 
 func init() {
-	submissionsListCommand.Flags().BoolVar(&shouldPrintCsv, "csv", false, "Prints the table in csv format")
-	submissionsListCommand.Flags().BoolVar(&includeEmpty, "empty", false, "Includes empty submissions")
+	exerciseListCommand.Flags().BoolVar(&shouldPrintCsv, "csv", false, "Prints the table in csv format")
+	exerciseListCommand.Flags().BoolVar(&includeEmpty, "empty", false, "Includes empty submissions")
 }

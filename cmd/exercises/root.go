@@ -16,6 +16,7 @@ var RootCommand = &cobra.Command{
 }
 
 func init() {
-	RootCommand.AddCommand(submissionsListCommand)
-	RootCommand.AddCommand(submissionsDistributeCommand)
+	RootCommand.AddCommand(exerciseListCommand)
+	RootCommand.AddCommand(exerciseDistributeCommand)
+	RootCommand.AddCommand(exerciseDownloadCommand)
 }
