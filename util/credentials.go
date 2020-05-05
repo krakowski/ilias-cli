@@ -6,6 +6,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"log"
 	"os"
+	"strings"
 	"syscall"
 )
 
@@ -39,7 +40,7 @@ func GetCredentials() *ilias.Credentials {
 	}
 
 	return &ilias.Credentials{
-		Username: username,
+		Username: strings.ToLower(username),
 		Password: password,
 	}
 }
