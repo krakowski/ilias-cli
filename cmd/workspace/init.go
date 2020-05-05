@@ -1,6 +1,8 @@
 package workspace
 
 import (
+	"errors"
+	"fmt"
 	"github.com/krakowski/ilias"
 	"github.com/krakowski/ilias-cli/util"
 	"github.com/spf13/cobra"
@@ -35,14 +37,14 @@ var workspaceInitCommand = &cobra.Command{
 		}
 
 		// Initialize progress bar
-		bar := util.StartProgressBar(len(memberIds), "Downloading submissions")
-		for _, memberId := range memberIds {
+		spin := util.StartSpinner(fmt.Sprintf("Downloading submissions (0/%d)", len(memberIds)))
+		for index, memberId := range memberIds {
 
 			correctionPath := filepath.Join(memberId, CorrectionFilename)
 
 			// Skip submissions already downloaded
 			if _, err := os.Stat(memberId); !os.IsNotExist(err) {
-				bar.Increment()
+				spin.UpdateMessage(fmt.Sprintf("Downloading submissions (%d/%d)", index + 1, len(memberIds)))
 				continue
 			}
 
@@ -54,13 +56,15 @@ var workspaceInitCommand = &cobra.Command{
 			})
 
 			if err != nil {
-				log.Fatal(err)
+				spin.StopError(err)
+				os.Exit(1)
 			}
 
 			// Get file extension
 			extensions, err := mime.ExtensionsByType(submission.ContentType)
 			if err != nil {
-				log.Fatal(err)
+				spin.StopError(err)
+				os.Exit(1)
 			}
 
 			// Ensure submission directory is present
@@ -69,14 +73,16 @@ var workspaceInitCommand = &cobra.Command{
 			}
 
 			if len(extensions) == 0 {
-				log.Fatal("unknown content type ", submission.ContentType)
+				spin.StopError(errors.New(fmt.Sprintf("unknown content type '%s'", submission.ContentType)))
+				os.Exit(1)
 			}
 
 			// Save submission
 			downloadPath := filepath.Join(memberId, SubmissionFilename + extensions[0])
 			err = ioutil.WriteFile(downloadPath, submission.Content, os.ModePerm)
 			if err != nil {
-				log.Fatal(err)
+				spin.StopError(err)
+				os.Exit(1)
 			}
 
 			err = util.WriteCorrectionTemplate(correctionPath, util.TemplateParams{
@@ -85,13 +91,14 @@ var workspaceInitCommand = &cobra.Command{
 			})
 
 			if err != nil {
-				log.Fatal(err)
+				spin.StopError(err)
+				os.Exit(1)
 			}
 
-			bar.Increment()
+			spin.UpdateMessage(fmt.Sprintf("Downloading submissions (%d/%d)", index + 1, len(memberIds)))
 		}
 
-		bar.Finish()
+		spin.StopSuccess(util.NoMessage)
 	},
 }
 

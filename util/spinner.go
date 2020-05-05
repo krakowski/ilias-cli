@@ -40,3 +40,7 @@ func (spin *Spinner) StopError(err error) {
 	spin.spinner.Stop()
 	fmt.Fprintf(os.Stderr, "%s%s - %s\n", Red(IconError), spin.spinner.Suffix, Red("(" + err.Error() + ")"))
 }
+
+func (spin *Spinner) UpdateMessage(message string) {
+	spin.spinner.Suffix = " " + message
+}

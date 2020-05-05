@@ -30,11 +30,10 @@ var workspaceUploadCommand = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Initialize progress bar
-		bar := util.StartProgressBar(len(members), "Uploading corrections")
+		spin := util.StartSpinner(fmt.Sprintf("Uploading corrections (0/%d)", len(members)))
 
 		// Upload comments
-		for _, correction := range corrections {
+		for index, correction := range corrections {
 			err := client.Exercise.UpdateComment(&ilias.CommentParams{
 				Reference:  workspace.Exercise.Reference,
 				Assignment: workspace.Exercise.Assignment,
@@ -44,12 +43,12 @@ var workspaceUploadCommand = &cobra.Command{
 				log.Fatal(err)
 			}
 
-			bar.Increment()
+			spin.UpdateMessage(fmt.Sprintf("Uploading corrections (%d/%d)", index + 1, len(members)))
 		}
 
-		bar.Finish()
+		spin.StopSuccess(util.NoMessage)
 
-		spin := util.StartSpinner("Updating grades")
+		spin = util.StartSpinner("Updating grades")
 		err := client.Exercise.UpdateGrades(&ilias.GradesQuery{
 			Reference:  workspace.Exercise.Reference,
 			Assignment: workspace.Exercise.Assignment,
