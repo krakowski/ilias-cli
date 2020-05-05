@@ -29,6 +29,11 @@ var workspaceInitCommand = &cobra.Command{
 		// Parse workspace file
 		memberIds := workspace.Corrections[client.User.Username]
 
+		// Add rar mime type
+		if err := mime.AddExtensionType(".rar", "application/x-rar"); err != nil {
+			log.Fatal(err)
+		}
+
 		// Initialize progress bar
 		bar := util.StartProgressBar(len(memberIds), "Downloading submissions")
 		for _, memberId := range memberIds {
@@ -63,8 +68,12 @@ var workspaceInitCommand = &cobra.Command{
 				os.Mkdir(memberId, os.ModePerm)
 			}
 
+			if len(extensions) == 0 {
+				log.Fatal("unknown content type ", submission.ContentType)
+			}
+
 			// Save submission
-			downloadPath := filepath.Join(memberId, SubmissionFilename+ extensions[0])
+			downloadPath := filepath.Join(memberId, SubmissionFilename + extensions[0])
 			err = ioutil.WriteFile(downloadPath, submission.Content, os.ModePerm)
 			if err != nil {
 				log.Fatal(err)
