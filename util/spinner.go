@@ -26,6 +26,10 @@ func StartSpinner(title string) *Spinner {
 	return &Spinner{spinner: spin}
 }
 
+func (spin *Spinner) StopSuccessRemove() {
+	spin.spinner.Stop()
+}
+
 func (spin *Spinner) StopSuccess(message string) {
 	spin.spinner.Stop()
 

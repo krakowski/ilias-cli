@@ -5,7 +5,6 @@ import (
 	"github.com/krakowski/ilias"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -68,19 +67,19 @@ func ReadCorrection(path string) (*ilias.Correction, error) {
 	return &correction, nil
 }
 
-func ReadCorrections(members []string) []ilias.Correction {
+func ReadCorrections(members []string) ([]ilias.Correction, error) {
 	var corrections []ilias.Correction
 	for _, member := range members {
 		path := filepath.Join(member, CorrectionFilename)
 		correction, err := ReadCorrection(path)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 
 		corrections = append(corrections, *correction)
 	}
 
-	return corrections
+	return corrections, nil
 }
 
 func GetCorrectionStats(corrections []ilias.Correction) CorrectionStats {

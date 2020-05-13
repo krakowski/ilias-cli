@@ -17,7 +17,11 @@ var workspaceStatusCommand = &cobra.Command{
 
 		workSpace := util.ReadWorkspace()
 		members := workSpace.Corrections[util.ReadUserCache()]
-		corrections := util.ReadCorrections(members)
+		corrections, err := util.ReadCorrections(members)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, util.Red(err.Error()))
+			os.Exit(1)
+		}
 
 		stats := util.GetCorrectionStats(corrections)
 		fmt.Fprintf(os.Stderr, "Inside ILIAS workspace '%s'\n\n", workSpace.Title)

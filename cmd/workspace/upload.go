@@ -9,6 +9,9 @@ import (
 	"os"
 )
 
+var (
+	customMembers []string
+)
 
 var workspaceUploadCommand = &cobra.Command{
 	Use:   "upload",
@@ -20,8 +23,18 @@ var workspaceUploadCommand = &cobra.Command{
 		workspace := util.ReadWorkspace()
 		client := util.NewIliasClient()
 
-		members := workspace.Corrections[client.User.Username]
-		corrections := util.ReadCorrections(members)
+		var members []string
+		if customMembers != nil {
+			members = customMembers
+		} else {
+			members = workspace.Corrections[client.User.Username]
+		}
+
+		corrections, err := util.ReadCorrections(members)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, util.Red(err.Error()))
+			os.Exit(1)
+		}
 
 		// Check if all submissions were corrected
 		stats := util.GetCorrectionStats(corrections)
@@ -49,7 +62,7 @@ var workspaceUploadCommand = &cobra.Command{
 		spin.StopSuccess(util.NoMessage)
 
 		spin = util.StartSpinner("Updating grades")
-		err := client.Exercise.UpdateGrades(&ilias.GradesQuery{
+		err = client.Exercise.UpdateGrades(&ilias.GradesQuery{
 			Reference:  workspace.Exercise.Reference,
 			Assignment: workspace.Exercise.Assignment,
 			Token:      client.User.Token,
@@ -77,4 +90,8 @@ var workspaceUploadCommand = &cobra.Command{
 		//
 		//spin.StopSuccess(fmt.Sprintf("Uploaded %d entries", len(corrections)))
 	},
+}
+
+func init() {
+	workspaceUploadCommand.Flags().StringSliceVar(&customMembers, "only", nil, "Uploads only the specified corrections")
 }
