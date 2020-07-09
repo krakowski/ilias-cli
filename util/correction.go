@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/krakowski/ilias"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
@@ -55,13 +56,13 @@ func WriteCorrectionTemplate(path string, params TemplateParams) error {
 func ReadCorrection(path string) (*ilias.Correction, error) {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: %v", path, err)
 	}
 
 	correction := ilias.Correction{}
 	err = yaml.Unmarshal(file, &correction)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: %v", path, err)
 	}
 
 	return &correction, nil

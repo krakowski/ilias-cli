@@ -35,13 +35,13 @@ func ReadWorkspace() Workspace {
 	assertWorkspaceExists()
 	data, err := ioutil.ReadFile(WorkspaceFilename)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("reading workspace failed: " + err.Error())
 	}
 
 	workspace := Workspace{}
 	err = yaml.Unmarshal(data, &workspace)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("unmarshaling workspace faild: " + err.Error())
 	}
 
 	return workspace
