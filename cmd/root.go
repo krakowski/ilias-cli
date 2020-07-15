@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/krakowski/ilias-cli/cmd/exercises"
+	"github.com/krakowski/ilias-cli/cmd/grades"
 	"github.com/krakowski/ilias-cli/cmd/members"
 	"github.com/krakowski/ilias-cli/cmd/workspace"
 	"github.com/krakowski/ilias-cli/util"
@@ -15,7 +16,7 @@ import (
 )
 
 const (
-	version = "1.3.6"
+	version = "1.3.7"
 	releaseUrl = "https://api.github.com/repos/krakowski/ilias-cli/releases/latest"
 	downloadUrlTemplate = "https://github.com/krakowski/ilias-cli/releases/download/%s/ilias-%s-%s"
 )
@@ -74,6 +75,7 @@ func init() {
 	rootCommand.AddCommand(exercises.RootCommand)
 	rootCommand.AddCommand(members.RootCommand)
 	rootCommand.AddCommand(workspace.RootCommand)
+	rootCommand.AddCommand(grades.RootCommand)
 	rootCommand.Version = version
 }
 

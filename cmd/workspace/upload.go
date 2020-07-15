@@ -62,7 +62,7 @@ var workspaceUploadCommand = &cobra.Command{
 		spin.StopSuccess(util.NoMessage)
 
 		spin = util.StartSpinner("Updating grades")
-		err = client.Exercise.UpdateGrades(&ilias.GradesQuery{
+		err = client.Exercise.UpdateGrades(&ilias.GradesUpdateQuery{
 			Reference:  workspace.Exercise.Reference,
 			Assignment: workspace.Exercise.Assignment,
 			Token:      client.User.Token,
