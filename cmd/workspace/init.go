@@ -6,9 +6,8 @@ import (
 	"github.com/krakowski/ilias"
 	"github.com/krakowski/ilias-cli/util"
 	"github.com/spf13/cobra"
+	"github.com/gabriel-vasile/mimetype"
 	"io/ioutil"
-	"log"
-	"mime"
 	"os"
 	"path/filepath"
 )
@@ -30,11 +29,6 @@ var workspaceInitCommand = &cobra.Command{
 
 		// Parse workspace file
 		memberIds := workspace.Corrections[client.User.Username]
-
-		// Add rar mime type
-		if err := mime.AddExtensionType(".rar", "application/x-rar"); err != nil {
-			log.Fatal(err)
-		}
 
 		// Initialize progress bar
 		spin := util.StartSpinner(fmt.Sprintf("Downloading submissions (0/%d)", len(memberIds)))
@@ -60,25 +54,20 @@ var workspaceInitCommand = &cobra.Command{
 				os.Exit(1)
 			}
 
-			// Get file extension
-			extensions, err := mime.ExtensionsByType(submission.ContentType)
-			if err != nil {
-				spin.StopError(err)
+			// Detect content type
+			mime := mimetype.Detect(submission.Content)
+			if len(mime.Extension()) == 0 {
+				spin.StopError(errors.New("detecting content type failed"))
 				os.Exit(1)
 			}
 
 			// Ensure submission directory is present
 			if _, err := os.Stat(memberId); os.IsNotExist(err) {
-				os.Mkdir(memberId, os.ModePerm)
-			}
-
-			if len(extensions) == 0 {
-				spin.StopError(errors.New(fmt.Sprintf("unknown content type '%s'", submission.ContentType)))
-				os.Exit(1)
+				_ = os.Mkdir(memberId, os.ModePerm)
 			}
 
 			// Save submission
-			downloadPath := filepath.Join(memberId, SubmissionFilename + extensions[0])
+			downloadPath := filepath.Join(memberId, SubmissionFilename + mime.Extension())
 			err = ioutil.WriteFile(downloadPath, submission.Content, os.ModePerm)
 			if err != nil {
 				spin.StopError(err)
