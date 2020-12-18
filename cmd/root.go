@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	version = "1.4.1"
+	version = "1.4.2"
 	releaseUrl = "https://api.github.com/repos/krakowski/ilias-cli/releases/latest"
 	downloadUrlTemplate = "https://github.com/krakowski/ilias-cli/releases/download/%s/ilias-%s-%s"
 )
