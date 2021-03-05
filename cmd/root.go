@@ -6,6 +6,7 @@ import (
 	"github.com/krakowski/ilias-cli/cmd/exercises"
 	"github.com/krakowski/ilias-cli/cmd/grades"
 	"github.com/krakowski/ilias-cli/cmd/members"
+	"github.com/krakowski/ilias-cli/cmd/settings"
 	"github.com/krakowski/ilias-cli/cmd/workspace"
 	"github.com/krakowski/ilias-cli/util"
 	"github.com/spf13/cobra"
@@ -76,6 +77,7 @@ func init() {
 	rootCommand.AddCommand(members.RootCommand)
 	rootCommand.AddCommand(workspace.RootCommand)
 	rootCommand.AddCommand(grades.RootCommand)
+	rootCommand.AddCommand(settings.RootCommand)
 	rootCommand.Version = version
 }
 
