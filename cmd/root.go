@@ -3,20 +3,21 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"runtime"
+
 	"github.com/krakowski/ilias-cli/cmd/exercises"
 	"github.com/krakowski/ilias-cli/cmd/grades"
 	"github.com/krakowski/ilias-cli/cmd/members"
 	"github.com/krakowski/ilias-cli/cmd/workspace"
 	"github.com/krakowski/ilias-cli/util"
 	"github.com/spf13/cobra"
-	"log"
-	"net/http"
-	"os"
-	"runtime"
 )
 
 const (
-	version = "1.4.3"
+	version = "1.4.4"
 	releaseUrl = "https://api.github.com/repos/krakowski/ilias-cli/releases/latest"
 	downloadUrlTemplate = "https://github.com/krakowski/ilias-cli/releases/download/%s/ilias-%s-%s"
 )
