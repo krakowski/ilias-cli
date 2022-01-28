@@ -2,8 +2,9 @@ package util
 
 import (
 	"fmt"
-	"github.com/krakowski/ilias"
 	"os"
+
+	"github.com/krakowski/ilias"
 )
 
 func NewIliasClient() (*ilias.Client) {
@@ -15,7 +16,7 @@ func NewIliasClient() (*ilias.Client) {
 		os.Exit(1)
 	}
 
-	spin.StopSuccess(fmt.Sprintf("Welcome %s!", client.User.Firstname))
+	spin.StopSuccess(fmt.Sprintf("Logged in as %s!", client.User.Username))
 	WriteUserCache(client.User.Username)
 	return client
 }
