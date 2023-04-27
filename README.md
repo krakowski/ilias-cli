@@ -1,3 +1,7 @@
+> :warning: &nbsp; **NO LONGER MAINTAINED**
+>
+> This project is no longer maintained. Please see https://github.com/YellowOfTheEgg/ilias-cli for an updated version.
+
 This is a small console application with the primary goal of managing and
 grading exercise tasks within the ILIAS eLearning platform.
 
